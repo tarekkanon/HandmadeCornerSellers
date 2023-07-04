@@ -37,7 +37,7 @@ def login():
         if current_user.is_authenticated:
             return redirect(url_for('products.home'))
 
-    return render_template("login.html", user=current_user)
+    return render_template("loginv2.html", user=current_user)
 
 
 @auth.route('/logout')
@@ -79,4 +79,4 @@ def sign_up():
             return redirect(url_for('products.home'))
 
 
-    return render_template("signup.html", user=current_user)
+    return render_template("register.html", user=current_user)
