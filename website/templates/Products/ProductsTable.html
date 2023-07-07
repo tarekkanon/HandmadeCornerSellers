@@ -1,0 +1,134 @@
+{% extends "./seller_panel.html" %} {% block title %}Handmade Corner | Seller |
+Products{% endblock %} {% block content %}
+<div class="col-12">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">All your products</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <div id="productstable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+        <div class="row">
+          <div class="col-sm-12">
+            <table
+              id="productstable"
+              class="table table-bordered table-striped dataTable dtr-inline"
+              aria-describedby="productstable_info"
+            >
+              <thead>
+                <tr>
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="productstable"
+                    rowspan="1"
+                    aria-label="Product ID: activate to sort column descending"
+                  >
+                    Product ID
+                  </th>
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="productstable"
+                    rowspan="1"
+                    aria-label="Name: activate to sort column descending"
+                  >
+                    Name
+                  </th>
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="productstable"
+                    rowspan="1"
+                    aria-label="Unit: activate to sort column descending"
+                  >
+                    Unit
+                  </th>
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="productstable"
+                    rowspan="1"
+                    aria-label="Category: activate to sort column descending"
+                  >
+                    Category
+                  </th>
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="productstable"
+                    rowspan="1"
+                    aria-label="Sub Category: activate to sort column descending"
+                  >
+                    Sub Category
+                  </th>
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="productstable"
+                    rowspan="1"
+                    aria-label="Status: activate to sort column descending"
+                  >
+                    Status
+                  </th>
+                  <th
+                    class="text-center"
+                    tabindex="0"
+                    aria-controls="productstable"
+                    rowspan="1"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for products in model.products_list %}
+                <tr
+                  class="{% if loop.index % 2 == 0 %} even {% else %} odd {% endif %}"
+                >
+                  <td class="sorting_1 dtr-control">
+                    {{ products.ProductId }}
+                  </td>
+                  <td>{{ products.ProductName }}</td>
+                  <td>{{ products['ProductUnit'] }}</td>
+                  <td>{{ products['CategoryName'] }}</td>
+                  <td>{{ products['SubCategoryName'] }}</td>
+                  <td>{{ products['ProductStatus'] }}</td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      <!-- {% set _ = session.update({"mykey": "myvalue"}) %} -->
+                      <button type="button" class="btn btn-danger">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" class="btn btn-danger">
+                        <i class="fa fa-ban"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+{% endblock content %} {% block jsforpage %}
+<script>
+  $(function () {
+    $("#productstable")
+      .DataTable({
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+      })
+      .buttons()
+      .container()
+      .appendTo("#productstable_wrapper .col-md-6:eq(0)");
+  });
+</script>
+{% endblock jsforpage %}

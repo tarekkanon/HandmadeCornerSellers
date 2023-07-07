@@ -1,14 +1,17 @@
 from flask_login import UserMixin
 
+
 class Seller(UserMixin):
     id = 0
-    email = ''
-    password = ''
+    email = ""
+    password = ""
+    token = ""
 
     def __init__(self, sellerObj):
-        self.id = sellerObj['SellerId']
-        self.email = sellerObj['SellerEmail']
-        self.password = sellerObj['SellerPassword']
+        self.id = sellerObj["SellerId"]
+        self.email = sellerObj["SellerEmail"]
+        self.password = sellerObj["SellerPassword"]
+        self.token = sellerObj["token"]
         self._authenticated = True
         self._active = True
 

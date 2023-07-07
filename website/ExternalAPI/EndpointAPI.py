@@ -1,60 +1,62 @@
-
 from enum import Enum
 
+
 class EndpointURLs(Enum):
-    '''
-        Customers endpoint urls
-    '''
-    CUSTOMERS = 'customers/'
+    """
+    Customers endpoint urls
+    """
 
-    '''
+    CUSTOMERS = "customers/"
+
+    """
         Sellers endpoint urls
-    '''
-    SELLERS_NEW = 'sellers/'
-    SELLERS_LOGIN = 'sellers/login'
-    SELLERS_LOGIN_SESSION = 'sellers/login_session'
-    SELLERS_UPDATE = 'sellers/update'
-    SELLERS_UPDATE_PASSWORD = 'sellers/update_password'
+    """
+    SELLERS_NEW = "sellers/"
+    SELLERS_LOGIN = "sellers/login"
+    SELLERS_LOGIN_SESSION = "sellers/login_session"
+    SELLERS_UPDATE = "sellers/update"
+    SELLERS_UPDATE_PASSWORD = "sellers/update_password"
 
-    '''
+    """
         Orders endpoint urls
-    '''
-    ORDERS = 'orders/'
+    """
+    ORDERS = "orders/"
 
-    '''
+    """
         Products endpoint urls
-    '''
-    PRODUCTS = 'products/'
+    """
+    PRODUCTS = "products/"
+    PRODUCTS_SELLER = "products/seller"
 
-    '''
+    """
         Reviews endpoint urls
-    '''
-    REVIEWS = 'reviews/'
+    """
+    REVIEWS = "reviews/"
 
-    '''
+    """
         Shipments endpoint urls
-    '''
-    SHIPMENTS = 'shipments/'
+    """
+    SHIPMENTS = "shipments/"
 
-    '''
+    """
         Categories endpoint urls
-    '''
-    CATEGORIES = 'categories/'
+    """
+    CATEGORIES = "categories/"
 
-    '''
+    """
         Sub categories endpoint urls
-    '''
-    SUBCATEGORIES = 'subcategories/'
+    """
+    SUBCATEGORIES = "subcategories/"
 
-    '''
+    """
         Tags endpoint urls
-    '''
-    TAG = 'tag/'
+    """
+    TAG = "tag/"
 
 
-class EndpointBuilder():
+class EndpointBuilder:
     def __init__(self):
-        self.BaseURL = 'http://127.0.0.1:8523/'
+        self.BaseURL = "http://127.0.0.1:8523/"
 
-    def BuildURL(self, endpoint = EndpointURLs):
+    def BuildURL(self, endpoint=EndpointURLs):
         return self.BaseURL + endpoint.value
