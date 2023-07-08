@@ -86,23 +86,21 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                 </tr>
               </thead>
               <tbody>
-                {% for products in model.products_list %}
+                {% for prod in model.products_list %}
                 <tr
                   class="{% if loop.index % 2 == 0 %} even {% else %} odd {% endif %}"
                 >
-                  <td class="sorting_1 dtr-control">
-                    {{ products.ProductId }}
-                  </td>
-                  <td>{{ products.ProductName }}</td>
-                  <td>{{ products['ProductUnit'] }}</td>
-                  <td>{{ products['CategoryName'] }}</td>
-                  <td>{{ products['SubCategoryName'] }}</td>
-                  <td>{{ products['ProductStatus'] }}</td>
+                  <td class="sorting_1 dtr-control">{{ prod.ProductId }}</td>
+                  <td>{{ prod.ProductName }}</td>
+                  <td>{{ prod.ProductUnit }}</td>
+                  <td>{{ prod.CategoryName }}</td>
+                  <td>{{ prod.SubCategoryName }}</td>
+                  <td>{{ prod.ProductStatus }}</td>
                   <td class="text-center">
                     <div class="btn-group">
                       <!-- {% set _ = session.update({"mykey": "myvalue"}) %} -->
                       <form
-                        action="{{ url_for('products.edit_product', product=products) }}"
+                        action="{{ url_for('products.edit_product', product=prod.ProductId) }}"
                         method="GET"
                       >
                         <button
@@ -112,13 +110,17 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                           <i class="fa fa-edit"> Edit</i>
                         </button>
                       </form>
-
-                      <button
-                        type="button"
-                        class="btn bg-gradient-warning btn-xs"
+                      <form
+                        action="{{ url_for('products.edit_product_status', product=prod.ProductId) }}"
+                        method="POST"
                       >
-                        <i class="fa fa-ban"> Disable</i>
-                      </button>
+                        <button
+                          type="button"
+                          class="btn bg-gradient-warning btn-xs"
+                        >
+                          <i class="fa fa-ban"> Disable</i>
+                        </button>
+                      </form>
                     </div>
                   </td>
                 </tr>

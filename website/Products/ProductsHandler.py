@@ -43,11 +43,30 @@ def home():
             raise
 
 
-@products.route("/edit_product", methods=["GET", "POST"])
+@products.route("/edit_product/<product>", methods=["GET"])
 @login_required
 def edit_product(product):
-    print(product)
     if request.method == "GET":
-        return render_template("Products/EditProduct.html", user=current_user)
+        page = {}
+        page["home"] = False
+        page["products"] = True
+        page["orders"] = False
+
+        content = {
+            "page": page,
+            "user": current_user,
+            "inside_content_title": "Products",
+            "product": product,
+        }
+
+        print(content)
+        return render_template("Products/EditProduct.html", model=content)
     else:
         None
+
+
+@products.route("/edit_product_status", methods=["POST"])
+@login_required
+def edit_product_status(product):
+    print(product)
+    return render_template("Products/EditProduct.html", user=current_user)
