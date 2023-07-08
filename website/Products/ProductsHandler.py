@@ -37,8 +37,17 @@ def home():
                 "inside_content_title": "Products",
                 "products_list": response,
             }
+            return render_template("Products/ProductsTable.html", model=content)
         except Exception as e:
             print(e)
             raise
 
-    return render_template("Products/ProductsTable.html", model=content)
+
+@products.route("/edit_product", methods=["GET", "POST"])
+@login_required
+def edit_product(product):
+    print(product)
+    if request.method == "GET":
+        return render_template("Products/EditProduct.html", user=current_user)
+    else:
+        None

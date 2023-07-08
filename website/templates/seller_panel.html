@@ -3,7 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Handmade Corner | Seller{% endblock %}</title>
+    <title>
+      {% block title %}Handmade Corner | Seller | {{ model.user.store_name }}{%
+      endblock %}
+    </title>
 
     <!-- Google Font: Source Sans Pro -->
     <link
@@ -140,7 +143,7 @@
               />
             </div>
             <div class="info">
-              <a href="#" class="d-block">Alexander Pierce</a>
+              <a href="#" class="d-block">{{ model.user.store_name }}</a>
             </div>
           </div>
 

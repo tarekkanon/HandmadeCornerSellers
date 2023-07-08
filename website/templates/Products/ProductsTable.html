@@ -1,5 +1,5 @@
-{% extends "./seller_panel.html" %} {% block title %}Handmade Corner | Seller |
-Products{% endblock %} {% block content %}
+{% extends "./seller_panel.html" %} {% block title %}Handmade Corner | {{
+model.user.store_name }} | Products{% endblock %} {% block content %}
 <div class="col-12">
   <div class="card">
     <div class="card-header">
@@ -7,6 +7,10 @@ Products{% endblock %} {% block content %}
     </div>
     <!-- /.card-header -->
     <div class="card-body">
+      <button type="button" class="btn btn-danger btn-block col-sm-1 ml-auto">
+        <i class="fa fa-plus"></i> New
+      </button>
+      <br />
       <div id="productstable_wrapper" class="dataTables_wrapper dt-bootstrap4">
         <div class="row">
           <div class="col-sm-12">
@@ -97,11 +101,23 @@ Products{% endblock %} {% block content %}
                   <td class="text-center">
                     <div class="btn-group">
                       <!-- {% set _ = session.update({"mykey": "myvalue"}) %} -->
-                      <button type="button" class="btn btn-danger">
-                        <i class="fa fa-edit"></i>
-                      </button>
-                      <button type="button" class="btn btn-danger">
-                        <i class="fa fa-ban"></i>
+                      <form
+                        action="{{ url_for('products.edit_product', product=products) }}"
+                        method="GET"
+                      >
+                        <button
+                          type="submit"
+                          class="btn bg-gradient-success btn-xs"
+                        >
+                          <i class="fa fa-edit"> Edit</i>
+                        </button>
+                      </form>
+
+                      <button
+                        type="button"
+                        class="btn bg-gradient-warning btn-xs"
+                      >
+                        <i class="fa fa-ban"> Disable</i>
                       </button>
                     </div>
                   </td>
@@ -124,7 +140,7 @@ Products{% endblock %} {% block content %}
         responsive: true,
         lengthChange: false,
         autoWidth: false,
-        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis", "add"],
       })
       .buttons()
       .container()

@@ -6,11 +6,13 @@ class Seller(UserMixin):
     email = ""
     password = ""
     token = ""
+    store_name = ""
 
     def __init__(self, sellerObj):
         self.id = sellerObj["SellerId"]
         self.email = sellerObj["SellerEmail"]
         self.password = sellerObj["SellerPassword"]
+        self.store_name = sellerObj["SellerStoreName"]
         self.token = sellerObj["token"]
         self._authenticated = True
         self._active = True
