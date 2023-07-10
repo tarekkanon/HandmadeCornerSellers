@@ -1,9 +1,69 @@
 {% extends "./seller_panel.html" %} {% block title %}Handmade Corner | {{
 model.user.store_name }} | Products{% endblock %} {% block content %}
 <div class="col-12">
-  <div class="card">
+  <div class="card card-primary">
     <div class="card-header">
-      <h3 class="card-title">{{ model.product }}</h3>
+      <h3 class="card-title">{{ model.product.ProductName }}</h3>
+    </div>
+    <div class="card-body">
+      <form class="form-horizontal">
+        <div class="card-body">
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Product ID</label>
+            <div class="col-sm-10">{{ model.product.ProductId }}</div>
+          </div>
+          <div class="form-group row">
+            <label for="ProductName" class="col-sm-2 col-form-label"
+              >Product Name</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                id="ProductName"
+                placeholder="Product Name"
+                value="{{ model.product.ProductName }}"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="ProductUnit" class="col-sm-2 col-form-label"
+              >Unit</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                id="ProductUnit"
+                placeholder="Product Unit"
+                value="{{ model.product.ProductUnit }}"
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="ProductDescription" class="col-sm-2 col-form-label"
+              >Description</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                id="ProductDescription"
+                placeholder="Product Description"
+                value="{{ model.product.ProductDescription }}"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+          <button type="submit" class="btn btn-info">Update</button>
+          <button type="submit" class="btn btn-default float-right">
+            Cancel
+          </button>
+        </div>
+        <!-- /.card-footer -->
+      </form>
     </div>
   </div>
 </div>

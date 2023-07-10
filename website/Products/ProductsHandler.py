@@ -47,22 +47,33 @@ def home():
 @login_required
 def edit_product(product):
     if request.method == "GET":
-        page = {}
-        page["home"] = False
-        page["products"] = True
-        page["orders"] = False
+        urlreq = EndpointBuilder().BuildURL(EndpointURLs.PRODUCTS) + product
 
-        content = {
-            "page": page,
-            "user": current_user,
-            "inside_content_title": "Products",
-            "product": product,
-        }
+        try:
+            response = CallAPI(
+                "GET",
+                urlreq,
+                require_authorization=True,
+                request_token=current_user.token,
+                request_data="",
+            )
+            print(response)
 
-        print(content)
-        return render_template("Products/EditProduct.html", model=content)
-    else:
-        None
+            page = {}
+            page["home"] = False
+            page["products"] = True
+            page["orders"] = False
+
+            content = {
+                "page": page,
+                "user": current_user,
+                "inside_content_title": "Product",
+                "product": response[0],
+            }
+            return render_template("Products/EditProduct.html", model=content)
+        except Exception as e:
+            print(e)
+            raise
 
 
 @products.route("/edit_product_status", methods=["POST"])
