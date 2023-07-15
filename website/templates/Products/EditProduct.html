@@ -66,5 +66,161 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
       </form>
     </div>
   </div>
+
+  <div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title">Options</h3>
+    </div>
+    <button
+      type="button"
+      class="btn btn-danger btn-block btn-sm col-sm-1 ml-auto"
+      style="margin: 1%"
+    >
+      <i class="fa fa-plus"></i> New Option
+    </button>
+    <div class="card-body">
+      <table
+        id="productoptionstable"
+        class="table table-bordered table-striped dataTable dtr-inline"
+        aria-describedby="productoptionstable_info"
+      >
+        <thead>
+          <tr>
+            <th
+              tabindex="0"
+              aria-controls="productoptionstable"
+              rowspan="1"
+              aria-label="Name: activate to sort column descending"
+            >
+              Name
+            </th>
+            <th
+              tabindex="0"
+              aria-controls="productoptionstable"
+              rowspan="1"
+              aria-label="Product Option ID: activate to sort column descending"
+            >
+              Product Option ID
+            </th>
+            <th
+              tabindex="0"
+              aria-controls="productoptionstable"
+              rowspan="1"
+              aria-label="Unit: activate to sort column descending"
+            >
+              Status
+            </th>
+            <th
+              class="text-center"
+              tabindex="0"
+              aria-controls="productoptionstable"
+              rowspan="1"
+            >
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for option in model.product.Options %}
+          <tr
+            class="{% if loop.index % 2 == 0 %} even {% else %} odd {% endif %}"
+            data-widget="expandable-table"
+            aria-expanded="false"
+          >
+            <td>
+              <button type="button" class="btn btn-primary p-0">
+                <i class="expandable-table-caret fas fa-caret-right fa-fw"></i>
+              </button>
+              {{ option.ProductOptionName }}
+            </td>
+            <td>{{ option.ProductOptionId }}</td>
+            <td>
+              {% if option.ProductOptionStatus == 1 %}
+              <span class="badge bg-success">Active</span>
+              {% else %}
+              <span class="badge bg-danger">Inactive</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              <div class="btn-group">
+                <form action="#" method="GET">
+                  <button type="submit" class="btn bg-gradient-success btn-xs">
+                    <i class="fa fa-edit"> Edit</i>
+                  </button>
+                </form>
+                <form action="#" method="POST">
+                  <button type="button" class="btn bg-gradient-warning btn-xs">
+                    <i class="fa fa-ban"> Disable</i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <tr class="expandable-body d-none">
+            <td>
+              <div class="p-1" style="display: none">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-block btn-sm col-sm-2 ml-auto"
+                      style="margin: 1%"
+                    >
+                      <i class="fa fa-plus"></i> New Variant
+                    </button>
+                    <tr>
+                      <th tabindex="0" rowspan="1">Product Variant ID</th>
+                      <th tabindex="0" rowspan="1">Variant Name</th>
+                      <th tabindex="0" rowspan="1">Price</th>
+                      <th tabindex="0" rowspan="1">Unit</th>
+                      <th tabindex="0" rowspan="1">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for variant in option.Variants %}
+                    <tr>
+                      <td>{{ variant.ProductVariantId }}</td>
+                      <td>{{ variant.ProductVariantName }}</td>
+                      <td>{{ variant.ProductVariantPrice }}</td>
+                      <td>{{ variant.ProductVariantUnit }}</td>
+                      <td>
+                        <div class="btn-group">
+                          <form action="#" method="GET">
+                            <button
+                              type="submit"
+                              class="btn bg-gradient-success btn-xs"
+                            >
+                              <i class="fa fa-edit"> Edit</i>
+                            </button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-{% endblock content %} {% block jsforpage %} {% endblock jsforpage %}
+{% endblock content %} {% block jsforpage %}
+<script>
+  $(function () {
+    $("#productoptionstable")
+      .DataTable({
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+      })
+      .buttons()
+      .container()
+      .appendTo("#productoptionstable_wrapper.col-md-6:eq(0)");
+  });
+</script>
+{% endblock jsforpage %}
