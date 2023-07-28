@@ -27,6 +27,11 @@ class EndpointURLs(Enum):
     """
     PRODUCTS = "products/"
     PRODUCTS_SELLER = "products/seller"
+    PRODUCTS_UPDATE_OPTION = "products/update_option"
+    PRODUCTS_UPDATE_VARIANT = "products/update_variant"
+    PRODUCTS_UPDATE = "products/update"
+    PRODUCTS_NEW_OPTION = "products/new_option"
+    PRODUCTS_NEW_VARIANT = "products/new_variant"
 
     """
         Reviews endpoint urls

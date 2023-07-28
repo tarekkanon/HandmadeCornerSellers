@@ -95,7 +95,13 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                   <td>{{ prod.ProductUnit }}</td>
                   <td>{{ prod.CategoryName }}</td>
                   <td>{{ prod.SubCategoryName }}</td>
-                  <td>{{ prod.ProductStatus }}</td>
+                  <td>
+                    {% if prod.ProductStatus == 'Active' %}
+                    <span class="badge bg-success">Active</span>
+                    {% else %}
+                    <span class="badge bg-warning">Suspended</span>
+                    {% endif %}
+                  </td>
                   <td class="text-center">
                     <div class="btn-group">
                       <!-- {% set _ = session.update({"mykey": "myvalue"}) %} -->

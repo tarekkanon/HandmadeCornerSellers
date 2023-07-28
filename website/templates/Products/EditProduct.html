@@ -6,7 +6,13 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
       <h3 class="card-title">{{ model.product.ProductName }}</h3>
     </div>
     <div class="card-body">
-      <form class="form-horizontal">
+      <form
+        class="form-horizontal"
+        method="POST"
+        action="{{ url_for('products.edit_product_details') }}"
+      >
+        <input hidden name="ProductId" value="{{ model.product.ProductId }}" />
+        <input hidden name="RequestedOperation" value="UpdateProduct" />
         <div class="card-body">
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Product ID</label>
@@ -20,6 +26,7 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
               <input
                 type="text"
                 class="form-control"
+                name="ProductName"
                 id="ProductName"
                 placeholder="Product Name"
                 value="{{ model.product.ProductName }}"
@@ -34,6 +41,7 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
               <input
                 type="text"
                 class="form-control"
+                name="ProductUnit"
                 id="ProductUnit"
                 placeholder="Product Unit"
                 value="{{ model.product.ProductUnit }}"
@@ -48,10 +56,39 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
               <input
                 type="text"
                 class="form-control"
+                name="ProductDescription"
                 id="ProductDescription"
                 placeholder="Product Description"
                 value="{{ model.product.ProductDescription }}"
               />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="ProductStatus" class="col-sm-2 col-form-label">
+              is Status Active</label
+            >
+            <div class="col-sm-1">
+              <input type="checkbox" class="form-control" name="ProductStatus"
+              id="ProductStatus" {% if model.product.ProductStatus== True %}
+              checked {% endif %} />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="ProductCategory" class="col-sm-2 col-form-label"
+              >Category</label
+            >
+            <div class="col-sm-10">
+              {% for category in model.categories %} {% if
+              category.SubCategoryId == model.product.SubCategoryId %} {{
+              category.CategoryName }} {% endif %} {% endfor %}
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="ProductSubCategory" class="col-sm-2 col-form-label"
+              >Sub Category</label
+            >
+            <div class="col-sm-10">
+              <div id="SubCategoryTree"></div>
             </div>
           </div>
         </div>
@@ -75,6 +112,8 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
       type="button"
       class="btn btn-danger btn-block btn-sm col-sm-1 ml-auto"
       style="margin: 1%"
+      data-toggle="modal"
+      data-target="#modal-new-product-option"
     >
       <i class="fa fa-plus"></i> New Option
     </button>
@@ -100,7 +139,7 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
               rowspan="1"
               aria-label="Product Option ID: activate to sort column descending"
             >
-              Product Option ID
+              Option ID
             </th>
             <th
               tabindex="0"
@@ -164,11 +203,14 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                       type="button"
                       class="btn btn-danger btn-block btn-sm col-sm-2 ml-auto"
                       style="margin: 1%"
+                      data-toggle="modal"
+                      data-target="#modal-new-product-variant"
+                      onclick='set_new_variant_option_id("{{ option.ProductOptionId }}")'
                     >
                       <i class="fa fa-plus"></i> New Variant
                     </button>
                     <tr>
-                      <th tabindex="0" rowspan="1">Product Variant ID</th>
+                      <th tabindex="0" rowspan="1">Variant ID</th>
                       <th tabindex="0" rowspan="1">Variant Name</th>
                       <th tabindex="0" rowspan="1">Price</th>
                       <th tabindex="0" rowspan="1">Unit</th>
@@ -184,17 +226,15 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                       <td>{{ variant.ProductVariantUnit }}</td>
                       <td>
                         <div class="btn-group">
-                          <form action="#" method="GET">
-                            <button
-                              type="btn btn-grp"
-                              class="btn bg-gradient-success btn-xs"
-                              data-toggle="modal"
-                              data-target="#modal-product-variant"
-                              onclick='set_selected_variant("{{ variant }}")'
-                            >
-                              <i class="fa fa-edit"> Edit</i>
-                            </button>
-                          </form>
+                          <button
+                            type="btn btn-grp"
+                            class="btn bg-gradient-success btn-xs"
+                            data-toggle="modal"
+                            data-target="#modal-product-variant"
+                            onclick='set_selected_variant("{{ variant }}")'
+                          >
+                            <i class="fa fa-edit"> Edit</i>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -221,7 +261,8 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
         method="POST"
         action="{{ url_for('products.edit_product_details') }}"
       >
-        <input hidden name="ProductOptionId" />
+        <input hidden name="ProductOptionId" id="InputProductOptionId" />
+        <input hidden name="ProductId" id="InputOptionProductId" />
         <input hidden name="RequestedOperation" value="UpdateProductOption" />
         <div class="modal-header">
           <h4 class="modal-title">Edit Product Option</h4>
@@ -286,25 +327,26 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
   <div class="modal-dialog modal-lg">
     <!-- modal-content -->
     <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Edit Product Variant</h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal" method="POST">
-          <input hidden name="ProductVariantId" />
-          <input
-            hidden
-            name="RequestedOperation"
-            value="UpdateProductVariant"
-          />
+      <form
+        class="form-horizontal"
+        method="POST"
+        action="{{ url_for('products.edit_product_details') }}"
+      >
+        <input hidden name="ProductVariantId" id="InputProductVariantId" />
+        <input hidden name="ProductId" id="InputVariantProductId" />
+        <input hidden name="RequestedOperation" value="UpdateProductVariant" />
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Product Variant</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
           <div class="card-body">
             <div class="form-group row">
               <label
@@ -359,23 +401,189 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
             </div>
           </div>
           <!-- /.card-body -->
-        </form>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
-          Close
-        </button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
     </div>
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog for product variant-->
 </div>
+
+<!-- modal-dialog for new product option -->
+<div class="modal fade" id="modal-new-product-option">
+  <div class="modal-dialog modal-lg">
+    <!-- modal-content -->
+    <div class="modal-content">
+      <form
+        class="form-horizontal"
+        method="POST"
+        action="{{ url_for('products.edit_product_details') }}"
+      >
+        <input hidden name="ProductId" id="InputNewOptionProductId" />
+        <input hidden name="RequestedOperation" value="NewProductOption" />
+        <div class="modal-header">
+          <h4 class="modal-title">New Product Option</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card-body">
+            <div class="form-group row">
+              <label
+                for="InputProductOptionName"
+                class="col-sm-4 col-form-label"
+                >Product Option Name</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="ProductOptionName"
+                  id="InputProductOptionName"
+                  placeholder="Product Option Name"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="offset-sm-4 col-sm-8">
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    name="ProductOptionStatus"
+                    class="form-check-input"
+                    id="InputProductOptionStatus"
+                  />
+                  <label class="form-check-label" for="status">Active</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog for new product option-->
+</div>
+
+<!-- modal-dialog for new product variant -->
+<div class="modal fade" id="modal-new-product-variant">
+  <div class="modal-dialog modal-lg">
+    <!-- modal-content -->
+    <div class="modal-content">
+      <form
+        class="form-horizontal"
+        method="POST"
+        action="{{ url_for('products.edit_product_details') }}"
+      >
+        <input hidden name="ProductOptionId" id="InputNewVarProductOptionId" />
+        <input hidden name="ProductId" id="InputNewVariantProductId" />
+        <input hidden name="RequestedOperation" value="NewProductVariant" />
+        <div class="modal-header">
+          <h4 class="modal-title">New Product Variant</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card-body">
+            <div class="form-group row">
+              <label
+                for="InputProductVariantName"
+                class="col-sm-4 col-form-label"
+                >Product Variant Name</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="ProductVariantName"
+                  id="InputProductVariantName"
+                  placeholder="Product Variant Name"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label
+                for="InputProductVariantPrice"
+                class="col-sm-4 col-form-label"
+                >Product Variant Price</label
+              >
+              <div class="col-sm-8 input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">EGP</span>
+                </div>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="ProductVariantPrice"
+                  id="InputProductVariantPrice"
+                  placeholder="Product Variant Price"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label
+                for="InputProductVariantUnit"
+                class="col-sm-4 col-form-label"
+                >Product Variant Unit</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="ProductVariantUnit"
+                  id="InputProductVariantUnit"
+                  placeholder="Product Variant Unit"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog for new product variant-->
+</div>
 {% endblock content %} {% block jsforpage %}
 <script>
+  let product_id = "{{ model.product.ProductId }}";
+  let categories_select = "{{ model.categories|safe }}";
   let selected_option;
   let selected_variant;
+  let new_variant_for_option_id;
 
   function set_selected_option(option) {
     txt = new DOMParser().parseFromString(option, "text/html").documentElement
@@ -389,6 +597,11 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
 
     document.getElementById("InputProductOptionStatus").checked =
       selected_option.ProductOptionStatus;
+
+    document.getElementById("InputProductOptionId").value =
+      selected_option.ProductOptionId;
+
+    document.getElementById("InputOptionProductId").value = product_id;
   });
 
   function set_selected_variant(variant) {
@@ -406,6 +619,25 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
 
     document.getElementById("InputProductVariantUnit").value =
       selected_variant.ProductVariantUnit;
+
+    document.getElementById("InputProductVariantId").value =
+      selected_variant.ProductVariantId;
+
+    document.getElementById("InputVariantProductId").value = product_id;
+  });
+
+  $("#modal-new-product-option").on("shown.bs.modal", function (event) {
+    document.getElementById("InputNewOptionProductId").value = product_id;
+  });
+
+  function set_new_variant_option_id(option_id) {
+    new_variant_for_option_id = option_id;
+  }
+
+  $("#modal-new-product-variant").on("shown.bs.modal", function (event) {
+    document.getElementById("InputNewVariantProductId").value = product_id;
+    document.getElementById("InputNewVarProductOptionId").value =
+      new_variant_for_option_id;
   });
 
   $(function () {
@@ -419,6 +651,11 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
       .buttons()
       .container()
       .appendTo("#productoptionstable_wrapper.col-md-6:eq(0)");
+  });
+  $(function () {
+    $("#SubCategoryTree").treeview({
+      data: JSON.parse(categories_select),
+    });
   });
 </script>
 {% endblock jsforpage %}
