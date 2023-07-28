@@ -110,17 +110,6 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                           <i class="fa fa-edit"> Edit</i>
                         </button>
                       </form>
-                      <form
-                        action="{{ url_for('products.edit_product_status', product=prod.ProductId) }}"
-                        method="POST"
-                      >
-                        <button
-                          type="button"
-                          class="btn bg-gradient-warning btn-xs"
-                        >
-                          <i class="fa fa-ban"> Disable</i>
-                        </button>
-                      </form>
                     </div>
                   </td>
                 </tr>

@@ -76,8 +76,10 @@ def edit_product(product):
             raise
 
 
-@products.route("/edit_product_status", methods=["POST"])
+@products.route("/edit_product_details", methods=["POST"])
 @login_required
-def edit_product_status(product):
-    print(product)
+def edit_product_details():
+    if request.method == "POST":
+        print(request.RequestedOperation)
+
     return render_template("Products/EditProduct.html", user=current_user)

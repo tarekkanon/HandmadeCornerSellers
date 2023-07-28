@@ -152,12 +152,6 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                 >
                   <i class="fa fa-edit"> Edit</i>
                 </button>
-                <button
-                  type="btn btn-grp"
-                  class="btn bg-gradient-warning btn-xs"
-                >
-                  <i class="fa fa-ban"> Disable</i>
-                </button>
               </div>
             </td>
           </tr>
@@ -192,8 +186,11 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                         <div class="btn-group">
                           <form action="#" method="GET">
                             <button
-                              type="submit"
+                              type="btn btn-grp"
                               class="btn bg-gradient-success btn-xs"
+                              data-toggle="modal"
+                              data-target="#modal-product-variant"
+                              onclick='set_selected_variant("{{ variant }}")'
                             >
                               <i class="fa fa-edit"> Edit</i>
                             </button>
@@ -219,22 +216,30 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
   <div class="modal-dialog modal-lg">
     <!-- modal-content -->
     <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Edit Product Option</h4>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="form-horizontal">
+      <form
+        class="form-horizontal"
+        method="POST"
+        action="{{ url_for('products.edit_product_details') }}"
+      >
+        <input hidden name="ProductOptionId" />
+        <input hidden name="RequestedOperation" value="UpdateProductOption" />
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Product Option</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
           <div class="card-body">
             <div class="form-group row">
-              <label for="inputoptionname" class="col-sm-2 col-form-label"
+              <label
+                for="InputProductOptionName"
+                class="col-sm-2 col-form-label"
                 >Product Option Name</label
               >
               <div class="col-sm-10">
@@ -242,7 +247,7 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                   type="text"
                   class="form-control"
                   name="ProductOptionName"
-                  id="inputoptionname"
+                  id="InputProductOptionName"
                   placeholder="Product Option Name"
                 />
               </div>
@@ -254,10 +259,102 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
                     type="checkbox"
                     name="ProductOptionStatus"
                     class="form-check-input"
-                    id="inputoptionstatus"
+                    id="InputProductOptionStatus"
                   />
                   <label class="form-check-label" for="status">Active</label>
                 </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog for product option-->
+</div>
+
+<!-- modal-dialog for product variant -->
+<div class="modal fade" id="modal-product-variant">
+  <div class="modal-dialog modal-lg">
+    <!-- modal-content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Product Variant</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST">
+          <input hidden name="ProductVariantId" />
+          <input
+            hidden
+            name="RequestedOperation"
+            value="UpdateProductVariant"
+          />
+          <div class="card-body">
+            <div class="form-group row">
+              <label
+                for="InputProductVariantName"
+                class="col-sm-4 col-form-label"
+                >Product Variant Name</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="ProductVariantName"
+                  id="InputProductVariantName"
+                  placeholder="Product Variant Name"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label
+                for="InputProductVariantPrice"
+                class="col-sm-4 col-form-label"
+                >Product Variant Price</label
+              >
+              <div class="col-sm-8 input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">EGP</span>
+                </div>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="ProductVariantPrice"
+                  id="InputProductVariantPrice"
+                  placeholder="Product Variant Price"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label
+                for="InputProductVariantUnit"
+                class="col-sm-4 col-form-label"
+                >Product Variant Unit</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="ProductVariantUnit"
+                  id="InputProductVariantUnit"
+                  placeholder="Product Variant Unit"
+                />
               </div>
             </div>
           </div>
@@ -273,17 +370,43 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
     </div>
     <!-- /.modal-content -->
   </div>
-  <!-- /.modal-dialog for product option-->
+  <!-- /.modal-dialog for product variant-->
 </div>
 {% endblock content %} {% block jsforpage %}
 <script>
   let selected_option;
+  let selected_variant;
 
   function set_selected_option(option) {
     txt = new DOMParser().parseFromString(option, "text/html").documentElement
       .textContent;
     selected_option = JSON.parse(txt.replaceAll("'", '"'));
   }
+
+  $("#modal-product-option").on("shown.bs.modal", function (event) {
+    document.getElementById("InputProductOptionName").value =
+      selected_option.ProductOptionName;
+
+    document.getElementById("InputProductOptionStatus").checked =
+      selected_option.ProductOptionStatus;
+  });
+
+  function set_selected_variant(variant) {
+    txt = new DOMParser().parseFromString(variant, "text/html").documentElement
+      .textContent;
+    selected_variant = JSON.parse(txt.replaceAll("'", '"'));
+  }
+
+  $("#modal-product-variant").on("shown.bs.modal", function (event) {
+    document.getElementById("InputProductVariantName").value =
+      selected_variant.ProductVariantName;
+
+    document.getElementById("InputProductVariantPrice").value =
+      selected_variant.ProductVariantPrice;
+
+    document.getElementById("InputProductVariantUnit").value =
+      selected_variant.ProductVariantUnit;
+  });
 
   $(function () {
     $("#productoptionstable")
@@ -296,14 +419,6 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
       .buttons()
       .container()
       .appendTo("#productoptionstable_wrapper.col-md-6:eq(0)");
-  });
-
-  $("#modal-product-option").on("shown.bs.modal", function (event) {
-    document.getElementById("inputoptionname").value =
-      selected_option.ProductOptionName;
-
-    document.getElementById("inputoptionstatus").checked =
-      selected_option.ProductOptionStatus;
   });
 </script>
 {% endblock jsforpage %}
