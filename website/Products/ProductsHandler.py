@@ -68,24 +68,23 @@ def edit_product(product):
             category_list = []
             for item in response["categories"]:
                 cat = {}
-                # cat["CategoryId"] = item["CategoryId"]
-                cat["text"] = item["CategoryName"]
-                cat["selectable"] = False
-                cat["nodeType"] = "main"
+                cat["CategoryId"] = item["CategoryId"]
+                cat["CategoryName"] = item["CategoryName"]
 
-                if cat["text"] not in category_list:
-                    sub_category_list = []
+                if cat not in category_list:
+                    category_list.append(cat)
 
-                    for subItem in response["categories"]:
+            for catItem in category_list:
+                sub_category_list = []
+                for catResp in response["categories"]:
+                    if catItem["CategoryId"] == catResp["CategoryId"]:
                         subCat = {}
-                        # subCat["SubCategoryId"] = subItem["SubCategoryId"]
-                        subCat["text"] = subItem["SubCategoryName"]
-                        subCat["nodeType"] = "sub"
+                        subCat["SubCategoryId"] = catResp["SubCategoryId"]
+                        subCat["SubCategoryName"] = catResp["SubCategoryName"]
+
                         sub_category_list.append(subCat)
 
-                    cat["nodes"] = sub_category_list
-
-                    category_list.append(cat)
+                    catItem["subcategories"] = sub_category_list
 
             print(category_list)
 
@@ -173,6 +172,7 @@ def edit_product_details():
             data["ProductName"] = request.form["ProductName"]
             data["ProductDescription"] = request.form["ProductDescription"]
             data["ProductUnit"] = request.form["ProductUnit"]
+            data["SubCategoryId"] = request.form["SubCategoryId"]
 
             data["ProductStatus"] = 0
 
