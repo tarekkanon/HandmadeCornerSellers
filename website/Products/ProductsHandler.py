@@ -7,6 +7,30 @@ from ..ExternalAPI.APIHandller import CallAPI
 products = Blueprint("products", __name__)
 
 
+def populate_categories(response_categories):
+    category_list = []
+    for item in response_categories:
+        cat = {}
+        cat["CategoryId"] = item["CategoryId"]
+        cat["CategoryName"] = item["CategoryName"]
+
+        if cat not in category_list:
+            category_list.append(cat)
+
+    for catItem in category_list:
+        sub_category_list = []
+        for catResp in response_categories:
+            if catItem["CategoryId"] == catResp["CategoryId"]:
+                subCat = {}
+                subCat["SubCategoryId"] = catResp["SubCategoryId"]
+                subCat["SubCategoryName"] = catResp["SubCategoryName"]
+
+                sub_category_list.append(subCat)
+
+            catItem["subcategories"] = sub_category_list
+    return category_list
+
+
 @products.route("/", methods=["GET", "POST"])
 @login_required
 def home():
@@ -25,7 +49,8 @@ def home():
                 request_token=current_user.token,
                 request_data=reqjson,
             )
-            print(response)
+            category_list = populate_categories(response["categories"])
+
             page = {}
             page["home"] = False
             page["products"] = True
@@ -35,8 +60,10 @@ def home():
                 "page": page,
                 "user": current_user,
                 "inside_content_title": "Products",
-                "products_list": response,
+                "products_list": response["products"],
+                "categories": category_list,
             }
+
             return render_template("Products/ProductsTable.html", model=content)
         except Exception as e:
             print(e)
@@ -63,30 +90,7 @@ def edit_product(product):
             page["products"] = True
             page["orders"] = False
 
-            print(response)
-
-            category_list = []
-            for item in response["categories"]:
-                cat = {}
-                cat["CategoryId"] = item["CategoryId"]
-                cat["CategoryName"] = item["CategoryName"]
-
-                if cat not in category_list:
-                    category_list.append(cat)
-
-            for catItem in category_list:
-                sub_category_list = []
-                for catResp in response["categories"]:
-                    if catItem["CategoryId"] == catResp["CategoryId"]:
-                        subCat = {}
-                        subCat["SubCategoryId"] = catResp["SubCategoryId"]
-                        subCat["SubCategoryName"] = catResp["SubCategoryName"]
-
-                        sub_category_list.append(subCat)
-
-                    catItem["subcategories"] = sub_category_list
-
-            print(category_list)
+            category_list = populate_categories(response["categories"])
 
             content = {
                 "page": page,
@@ -100,6 +104,48 @@ def edit_product(product):
         except Exception as e:
             print(e)
             raise
+
+
+@products.route("/create_new_product", methods=["POST"])
+@login_required
+def create_new_product():
+    if request.method == "POST":
+        if request.form["RequestedOperation"] == "NewProduct":
+            urlreq = EndpointBuilder().BuildURL(EndpointURLs.PRODUCTS_NEW)
+
+            data = {}
+
+            data["ProductName"] = request.form["ProductName"]
+            data["ProductDescription"] = request.form["ProductDescription"]
+            data["ProductUnit"] = request.form["ProductUnit"]
+            data["ProductStatus"] = 0
+
+            if "ProductStatus" in request.form:
+                if request.form["ProductStatus"] == "on":
+                    data["ProductStatus"] = 1
+
+            data["SellerId"] = request.form["SellerId"]
+            data["SubCategoryId"] = request.form["SubCategoryId"]
+
+            try:
+                response = CallAPI(
+                    "POST",
+                    urlreq,
+                    require_authorization=True,
+                    request_token=current_user.token,
+                    request_data=data,
+                )
+
+                print(response)
+
+                return redirect(
+                    url_for("products.edit_product", product=response["ProductId"])
+                )
+            except Exception as e:
+                print(e)
+                raise
+
+    return redirect(url_for("products.home"))
 
 
 @products.route("/edit_product_details", methods=["POST"])

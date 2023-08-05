@@ -7,7 +7,12 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-      <button type="button" class="btn btn-danger btn-block col-sm-1 ml-auto">
+      <button
+        type="button"
+        class="btn btn-danger btn-block col-sm-1 ml-auto"
+        data-toggle="modal"
+        data-target="#modal-new-product"
+      >
         <i class="fa fa-plus"></i> New
       </button>
       <br />
@@ -129,6 +134,123 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
     <!-- /.card-body -->
   </div>
 </div>
+
+<!-- modal-dialog for new option -->
+<div class="modal fade" id="modal-new-product">
+  <div class="modal-dialog modal-lg">
+    <!-- modal-content -->
+    <div class="modal-content">
+      <form
+        class="form-horizontal"
+        method="POST"
+        action="{{ url_for('products.create_new_product') }}"
+      >
+        <input hidden name="SellerId" value="{{ model.user.id }}" />
+        <input hidden name="RequestedOperation" value="NewProduct" />
+        <div class="modal-header">
+          <h4 class="modal-title">New Product</h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card-body">
+            <div class="form-group row">
+              <label for="InputProductName" class="col-sm-4 col-form-label"
+                >Product Name</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="ProductName"
+                  id="InputProductName"
+                  placeholder="Product Name"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label
+                for="InputProductDescription"
+                class="col-sm-4 col-form-label"
+                >Product Description</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="ProductDescription"
+                  id="InputProductDescription"
+                  placeholder="Product Description"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="InputProductUnit" class="col-sm-4 col-form-label"
+                >Product Unit</label
+              >
+              <div class="col-sm-8">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="ProductUnit"
+                  id="InputProductUnit"
+                  placeholder="Product Unit"
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="ProductStatus" class="col-sm-2 col-form-label">
+                is Status Active</label
+              >
+              <div class="col-sm-1">
+                <input
+                  type="checkbox"
+                  class="form-control"
+                  name="ProductStatus"
+                  id="ProductStatus"
+                  checked
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="ProductSubCategory" class="col-sm-2 col-form-label"
+                >Category</label
+              >
+              <div class="col-sm-10">
+                <select name="SubCategoryId" class="form-control">
+                  {% for cat in model.categories %}
+                  <optgroup label="{{ cat.CategoryName }}">
+                    {% for subcat in cat.subcategories %}
+                    <option value="{{subcat.SubCategoryId}}">
+                      {{ subcat.SubCategoryName }}
+                    </option>
+                    {% endfor %}
+                  </optgroup>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog for new product option-->
+</div>
 {% endblock content %} {% block jsforpage %}
 <script>
   $(function () {
@@ -143,5 +265,7 @@ model.user.store_name }} | Products{% endblock %} {% block content %}
       .container()
       .appendTo("#productstable_wrapper .col-md-6:eq(0)");
   });
+
+  $("#modal-new-product").on("shown.bs.modal", function (event) {});
 </script>
 {% endblock jsforpage %}

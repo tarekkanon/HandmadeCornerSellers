@@ -26,6 +26,7 @@ class EndpointURLs(Enum):
         Products endpoint urls
     """
     PRODUCTS = "products/"
+    PRODUCTS_NEW = "products/new"
     PRODUCTS_SELLER = "products/seller"
     PRODUCTS_UPDATE_OPTION = "products/update_option"
     PRODUCTS_UPDATE_VARIANT = "products/update_variant"
