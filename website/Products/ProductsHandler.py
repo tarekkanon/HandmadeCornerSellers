@@ -1,6 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-import json
 from ..ExternalAPI.EndpointAPI import EndpointBuilder, EndpointURLs
 from ..ExternalAPI.APIHandller import CallAPI
 

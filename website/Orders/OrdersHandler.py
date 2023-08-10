@@ -1,0 +1,84 @@
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required, current_user
+from ..ExternalAPI.EndpointAPI import EndpointBuilder, EndpointURLs
+from ..ExternalAPI.APIHandller import CallAPI
+
+orders = Blueprint("orders", __name__)
+
+
+@orders.route("/orders", methods=["GET", "POST"])
+@login_required
+def seller_orders():
+    if request.method == "POST":
+        flash("Note added!", category="success")
+    else:
+        urlreq = EndpointBuilder().BuildURL(EndpointURLs.ORDERS)
+
+        print(urlreq)
+
+        reqjson = {"type": "seller", "SellerId": current_user.get_id()}
+
+        try:
+            response = CallAPI(
+                "GET",
+                urlreq,
+                require_authorization=True,
+                request_token=current_user.token,
+                request_data=reqjson,
+            )
+
+            print(response)
+
+            page = {}
+            page["home"] = False
+            page["products"] = False
+            page["orders"] = True
+
+            content = {
+                "page": page,
+                "user": current_user,
+                "inside_content_title": "Orders",
+                "orders_list": response,
+            }
+
+            return render_template("Orders/OrdersTable.html", model=content)
+        except Exception as e:
+            print(e)
+            raise
+
+
+@orders.route("/order_line_details/<order_line_edit>", methods=["GET"])
+@login_required
+def order_line_details(order_line_edit):
+    if request.method == "GET":
+        urlreq = EndpointBuilder().BuildURL(EndpointURLs.ORDERS_LINE)
+
+        reqjson = {"OrderLineId": order_line_edit}
+
+        try:
+            response = CallAPI(
+                "GET",
+                urlreq,
+                require_authorization=True,
+                request_token=current_user.token,
+                request_data=reqjson,
+            )
+
+            print(response)
+
+            page = {}
+            page["home"] = False
+            page["products"] = False
+            page["orders"] = True
+
+            content = {
+                "page": page,
+                "user": current_user,
+                "inside_content_title": "Orders",
+                "order": response[0],
+            }
+
+            return render_template("Orders/OrderDetails.html", model=content)
+        except Exception as e:
+            print(e)
+            raise

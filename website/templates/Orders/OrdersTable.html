@@ -1,0 +1,145 @@
+{% extends "./seller_panel.html" %} {% block title %}Handmade Corner | {{
+model.user.store_name }} | Orders{% endblock %} {% block content %}
+<div class="col-12">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">All your Orders</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <div id="orderstable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+        <div class="row">
+          <div class="col-sm-12">
+            <table
+              id="orderstable"
+              class="table table-bordered table-striped dataTable dtr-inline"
+              aria-describedby="orderstable_info"
+            >
+              <thead>
+                <tr>
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="orderstable"
+                    rowspan="1"
+                    aria-label="Order ID: activate to sort column descending"
+                  >
+                    Order ID
+                  </th>
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="orderstable"
+                    rowspan="1"
+                    aria-label="Order Date: activate to sort column descending"
+                  >
+                    Order Date
+                  </th>
+
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="orderstable"
+                    rowspan="1"
+                    aria-label="Order Status: activate to sort column descending"
+                  >
+                    Status
+                  </th>
+
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="orderstable"
+                    rowspan="1"
+                    aria-label="Product Name: activate to sort column descending"
+                  >
+                    Product
+                  </th>
+
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="orderstable"
+                    rowspan="1"
+                    aria-label="Quantity: activate to sort column descending"
+                  >
+                    Quantity
+                  </th>
+
+                  <th
+                    class="sorting"
+                    tabindex="0"
+                    aria-controls="orderstable"
+                    rowspan="1"
+                    aria-label="Variant Name: activate to sort column descending"
+                  >
+                    Variant
+                  </th>
+
+                  <th
+                    class="text-center"
+                    tabindex="0"
+                    aria-controls="orderstable"
+                    rowspan="1"
+                  >
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in model.orders_list %}
+                <tr
+                  class="{% if loop.index % 2 == 0 %} even {% else %} odd {% endif %}"
+                >
+                  <td class="sorting_1 dtr-control">{{ order.OrderId }}</td>
+                  <td>{{ order.OrderDate }}</td>
+                  <td>
+                    <span class="badge bg-success"
+                      >{{ order.OrderStatus }}</span
+                    >
+                  </td>
+                  <td>{{ order.ProductName }}</td>
+                  <td>{{ order.Quantity }}</td>
+                  <td>{{ order.ProductVariantName }}</td>
+                  <td class="text-center">
+                    <div class="btn-group">
+                      <form
+                        action="{{ url_for('orders.order_line_details', order_line_edit=order.OrderLineId) }}"
+                        method="GET"
+                      >
+                        <button
+                          type="submit"
+                          class="btn bg-gradient-success btn-xs"
+                        >
+                          <i class="fa fa-edit"> Edit</i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+{% endblock content %} {% block jsforpage %}
+<script>
+  $(function () {
+    $("#orderstable")
+      .DataTable({
+        responsive: true,
+        lengthChange: false,
+        autoWidth: false,
+        buttons: ["copy", "csv", "excel", "pdf", "print", "colvis"],
+      })
+      .buttons()
+      .container()
+      .appendTo("#orderstable_wrapper .col-md-6:eq(0)");
+  });
+</script>
+{% endblock jsforpage %}

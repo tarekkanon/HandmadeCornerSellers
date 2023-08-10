@@ -1,0 +1,21 @@
+{% extends "./seller_panel.html" %} {% block title %}Handmade Corner | {{
+model.user.store_name }} | Orders{% endblock %} {% block content %}
+
+<div class="col-12">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Order {{ model.order.OrderId }}</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <div id="orderstable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+        <div class="row">
+          <div class="col-sm-12"></div>
+        </div>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+</div>
+
+{% endblock content %} {% block jsforpage %} {% endblock jsforpage %}

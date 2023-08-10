@@ -20,7 +20,8 @@ class EndpointURLs(Enum):
     """
         Orders endpoint urls
     """
-    ORDERS = "orders/"
+    ORDERS = "orders"
+    ORDERS_LINE = "orders/order_line"
 
     """
         Products endpoint urls

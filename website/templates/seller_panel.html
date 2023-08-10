@@ -100,10 +100,12 @@
             <a href="{{url_for('auth.login')}}" class="nav-link">Home</a>
           </li>
           <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Products</a>
+            <a href="{{url_for('products.home')}}" class="nav-link">Products</a>
           </li>
           <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Orders</a>
+            <a href="{{url_for('orders.seller_orders')}}" class="nav-link"
+              >Orders</a
+            >
           </li>
         </ul>
         <!-- Right navbar links -->
@@ -169,7 +171,7 @@
 
               <li class="nav-item">
                 <a
-                  href="#"
+                  href="{{url_for('products.home')}}"
                   class="nav-link {% if model.page.products %}active{% endif %}"
                 >
                   <i class="nav-icon far fa-edit"></i>
@@ -179,7 +181,7 @@
 
               <li class="nav-item">
                 <a
-                  href="#"
+                  href="{{url_for('orders.seller_orders')}}"
                   class="nav-link {% if model.page.orders %}active{% endif %}"
                 >
                   <i class="nav-icon far fa-copy"></i>
