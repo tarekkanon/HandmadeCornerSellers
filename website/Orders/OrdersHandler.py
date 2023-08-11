@@ -74,7 +74,10 @@ def order_line_details(order_line_edit):
             content = {
                 "page": page,
                 "user": current_user,
-                "inside_content_title": "Orders",
+                "inside_content_title": "Orders "
+                + str(response[0]["OrderId"])
+                + " Customer "
+                + response[0]["CustomerName"],
                 "order": response[0],
             }
 

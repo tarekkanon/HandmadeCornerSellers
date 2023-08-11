@@ -4,13 +4,107 @@ model.user.store_name }} | Orders{% endblock %} {% block content %}
 <div class="col-12">
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">Order {{ model.order.OrderId }}</h3>
+      <h3 class="card-title">Product {{ model.order.ProductName }}</h3>
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-      <div id="orderstable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-        <div class="row">
-          <div class="col-sm-12"></div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="order_date">Order Date</label>
+            <input
+              type="datetime"
+              class="form-control"
+              id="order_date"
+              readonly
+              value="{{ model.order.OrderDate }}"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="product_variant">Product Variant</label>
+            <input
+              type="text"
+              class="form-control"
+              id="product_variant"
+              readonly
+              value="{{ model.order.ProductVariantName }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input
+              type="number"
+              class="form-control"
+              id="quantity"
+              readonly
+              value="{{ model.order.Quantity }}"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="order_status">Order Status</label>
+            <input
+              type="text"
+              class="form-control"
+              id="order_status"
+              readonly
+              value="{{ model.order.OrderStatus }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="product_option">Product Option</label>
+            <input
+              type="text"
+              class="form-control"
+              id="product_option"
+              readonly
+              value="{{ model.order.ProductOptionName }}"
+            />
+          </div>
+          <div class="form-group">
+            <label for="price">Total Price</label>
+            <input
+              type="number"
+              class="form-control"
+              id="price"
+              readonly
+              value="{{ model.order.Quantity * model.order.Price }}"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="product_variant_unit">Product Variant Unit</label>
+            <input
+              type="text"
+              class="form-control"
+              id="product_variant_unit"
+              readonly
+              value="{{ model.order.ProductVariantUnit }}"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <button
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#modal-confirm-order"
+          >
+            Confirm and start making
+          </button>
+        </div>
+        <div class="col-md-3">
+          <button
+            class="btn btn-danger"
+            data-toggle="modal"
+            data-target="#modal-cancel-order"
+          >
+            Cancel order
+          </button>
         </div>
       </div>
     </div>
@@ -18,4 +112,65 @@ model.user.store_name }} | Orders{% endblock %} {% block content %}
   </div>
 </div>
 
+<!-- modal-dialog for confirming order -->
+<div class="modal fade" id="modal-confirm-order">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Confirm Order</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to start making this order?</p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog for confirming order-->
+</div>
+
+<!-- modal-dialog for confirming order -->
+<div class="modal fade" id="modal-cancel-order">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-danger">
+      <div class="modal-header">
+        <h4 class="modal-title">Cancel Order</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel this order?</p>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-outline-light">
+          Cancel Order
+        </button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog for confirming order-->
+</div>
 {% endblock content %} {% block jsforpage %} {% endblock jsforpage %}
