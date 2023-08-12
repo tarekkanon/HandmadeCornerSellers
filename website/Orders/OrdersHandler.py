@@ -85,3 +85,39 @@ def order_line_details(order_line_edit):
         except Exception as e:
             print(e)
             raise
+
+
+@orders.route("/update_order", methods=["POST"])
+@login_required
+def seller_update_order():
+    if request.method == "POST":
+        if request.form["RequestedOperation"] == "ConfirmOrder":
+            urlreq = EndpointBuilder().BuildURL(EndpointURLs.ORDERS_UPDATE_CONFIRM)
+        elif request.form["RequestedOperation"] == "CancelOrder":
+            urlreq = EndpointBuilder().BuildURL(EndpointURLs.ORDERS_UPDATE_CANCEL)
+        else:
+            return
+
+        data = {}
+        data["OrderId"] = request.form["OrderId"]
+
+        try:
+            response = CallAPI(
+                "PUT",
+                urlreq,
+                require_authorization=True,
+                request_token=current_user.token,
+                request_data=data,
+            )
+
+            print(response)
+
+            return redirect(
+                url_for(
+                    "orders.order_line_details",
+                    order_line_edit=request.form["OrderLineId"],
+                )
+            )
+        except Exception as e:
+            print(e)
+            raise

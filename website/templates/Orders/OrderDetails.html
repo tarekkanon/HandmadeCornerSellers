@@ -134,7 +134,19 @@ model.user.store_name }} | Orders{% endblock %} {% block content %}
         <button type="button" class="btn btn-default" data-dismiss="modal">
           Close
         </button>
-        <button type="button" class="btn btn-primary">Confirm</button>
+        <form
+          method="POST"
+          action="{{ url_for('orders.seller_update_order') }}"
+        >
+          <input hidden name="OrderId" value="{{ model.order.OrderId }}" />
+          <input
+            hidden
+            name="OrderLineId"
+            value="{{ model.order.OrderLineId }}"
+          />
+          <input hidden name="RequestedOperation" value="ConfirmOrder" />
+          <button type="submit" class="btn btn-primary">Confirm</button>
+        </form>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -164,9 +176,21 @@ model.user.store_name }} | Orders{% endblock %} {% block content %}
         <button type="button" class="btn btn-default" data-dismiss="modal">
           Close
         </button>
-        <button type="button" class="btn btn-outline-light">
-          Cancel Order
-        </button>
+        <form
+          method="POST"
+          action="{{ url_for('orders.seller_update_order') }}"
+        >
+          <input hidden name="OrderId" value="{{ model.order.OrderId }}" />
+          <input
+            hidden
+            name="OrderLineId"
+            value="{{ model.order.OrderLineId }}"
+          />
+          <input hidden name="RequestedOperation" value="CancelOrder" />
+          <button type="submit" class="btn btn-outline-light">
+            Cancel Order
+          </button>
+        </form>
       </div>
     </div>
     <!-- /.modal-content -->

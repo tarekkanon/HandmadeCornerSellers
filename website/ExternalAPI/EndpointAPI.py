@@ -22,6 +22,8 @@ class EndpointURLs(Enum):
     """
     ORDERS = "orders"
     ORDERS_LINE = "orders/order_line"
+    ORDERS_UPDATE_CONFIRM = "orders/update/confirm"
+    ORDERS_UPDATE_CANCEL = "orders/update/cancel"
 
     """
         Products endpoint urls
